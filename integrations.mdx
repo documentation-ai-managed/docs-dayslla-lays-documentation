@@ -1,0 +1,152 @@
+---
+title: Integrations
+description: Connect Dayslla Lays Documentation with external tools and services
+---
+
+## Integration Overview
+
+Dayslla Lays Documentation integrates seamlessly with popular development and collaboration tools, allowing you to maintain documentation as part of your existing workflows.
+
+<Columns cols={3}>
+  <Card title="GitHub" icon="github" href="#">
+    Sync documentation with GitHub repositories.
+  </Card>
+  <Card title="Slack" icon="message-square" href="#">
+    Receive notifications in Slack channels.
+  </Card>
+  <Card title="Jira" icon="file-text" href="#">
+    Link documentation to Jira issues.
+  </Card>
+</Columns>
+
+## GitHub Integration
+
+Connect your documentation spaces directly to GitHub repositories for version-controlled documentation.
+
+<Tabs>
+  <Tab title="Repository Sync" icon="git-branch">
+    Automatically sync documentation changes with your GitHub repository.
+
+    <Steps>
+      <Step title="Connect Repository" icon="link">
+        Link your GitHub repository to a documentation space.
+      </Step>
+      <Step title="Configure Sync" icon="settings">
+        Set up automatic syncing for pushes and pull requests.
+      </Step>
+      <Step title="Monitor Changes" icon="eye">
+        Track documentation changes alongside code changes.
+      </Step>
+    </Steps>
+
+    <CodeGroup tabs="YAML,JSON">
+      ```yaml
+      # .github/workflows/docs-sync.yml
+      name: Sync Documentation
+      on:
+        push:
+          paths:
+            - 'docs/**'
+      jobs:
+        sync:
+          runs-on: ubuntu-latest
+          steps:
+            - uses: dayslla-lays/sync-action@v1
+              with:
+                api-key: ${{ secrets.DAYSLLA_API_KEY }}
+                space-id: ${{ secrets.SPACE_ID }}
+      ```
+      ```json
+      {
+        "repository": "your-org/your-repo",
+        "sync_path": "docs/",
+        "auto_commit": true,
+        "branch": "main"
+      }
+      ```
+    </CodeGroup>
+  </Tab>
+  <Tab title="Pull Request Reviews" icon="git-pull-request">
+    Include documentation reviews in your pull request process.
+
+    <Expandable title="Review Process" default-open="false">
+      When a pull request is created, Dayslla Lays can automatically check for updated documentation and suggest reviews.
+    </Expandable>
+  </Tab>
+</Tabs>
+
+## Slack Integration
+
+Keep your team informed about documentation changes through Slack notifications.
+
+<Request tabs="cURL" show-lines="true">
+  ```bash
+  curl -X POST https://api.dayslla-lays.com/v1/integrations/slack \
+       -H "Authorization: Bearer YOUR_API_KEY" \
+       -H "Content-Type: application/json" \
+       -d '{
+         "webhook_url": "https://hooks.slack.com/services/...",
+         "channel": "#docs-updates",
+         "events": ["doc.created", "doc.updated"]
+       }'
+  ```
+</Request>
+
+<Response tabs="Success" show-lines="false">
+  ```json
+  {
+    "integration_id": "slack_123",
+    "status": "active",
+    "channel": "#docs-updates"
+  }
+  ```
+</Response>
+
+## CI/CD Integration
+
+Automate documentation deployment as part of your CI/CD pipelines.
+
+<ExpandableGroup>
+  <Expandable title="GitHub Actions" default-open="true">
+    Use our GitHub Action to deploy documentation changes automatically.
+
+    <CodeGroup tabs="YAML">
+      ```yaml
+      - name: Deploy Documentation
+        uses: dayslla-lays/deploy-action@v1
+        with:
+          api-key: ${{ secrets.DAYSLLA_API_KEY }}
+          space-id: ${{ secrets.SPACE_ID }}
+          source-path: ./docs
+      ```
+    </CodeGroup>
+  </Expandable>
+  <Expandable title="Jenkins" default-open="false">
+    Integrate with Jenkins pipelines for automated documentation builds.
+  </Expandable>
+  <Expandable title="GitLab CI" default-open="false">
+    Deploy documentation changes using GitLab CI/CD.
+  </Expandable>
+</ExpandableGroup>
+
+<Callout kind="tip">Integrations help maintain documentation accuracy by keeping it in sync with your development process.</Callout>
+
+## Custom Integrations
+
+Build your own integrations using our comprehensive API.
+
+<ParamField path="integration_type" param-type="string" required="true">
+  The type of integration to create.
+</ParamField>
+
+<ParamField query="webhook_url" param-type="string" required="true">
+  The URL where webhook events will be sent.
+</ParamField>
+
+<ParamField body="config" param-type="object" required="false">
+  Additional configuration options for the integration.
+</ParamField>
+
+<Callout kind="info">Custom integrations allow you to connect Dayslla Lays with any tool that supports webhooks or APIs.</Callout>
+
+By leveraging integrations, you can create a seamless documentation workflow that fits naturally into your development and collaboration processes.

@@ -1,0 +1,113 @@
+---
+title: Configuration
+description: Configure your Dayslla Lays Documentation space for optimal performance
+---
+
+## Basic Configuration
+
+Setting up your Dayslla Lays Documentation space requires minimal configuration to get started. The platform provides sensible defaults while offering extensive customization options.
+
+<Steps>
+  <Step title="Create Space" icon="folder-plus">
+    Start by creating a new documentation space in your dashboard.
+  </Step>
+  <Step title="Set Permissions" icon="users">
+    Configure team access and permission levels for collaborators.
+  </Step>
+  <Step title="Customize Settings" icon="settings">
+    Adjust space settings like visibility, notifications, and integrations.
+  </Step>
+</Steps>
+
+## Environment Variables
+
+Dayslla Lays supports various environment variables to customize behavior across different deployment environments.
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DAYSLLA_API_URL` | API endpoint URL | `https://api.dayslla-lays.com` |
+| `DAYSLLA_WEBHOOK_SECRET` | Webhook signature secret | Generated automatically |
+| `DAYSLLA_CACHE_TTL` | Cache time-to-live in seconds | `300` |
+
+<Callout kind="tip">Environment variables override default settings and are ideal for staging and production deployments.</Callout>
+
+## Advanced Settings
+
+For more control over your documentation space, explore these advanced configuration options.
+
+<Tabs>
+  <Tab title="Themes" icon="palette">
+    Customize the appearance of your documentation with built-in themes or create your own.
+
+    <CodeGroup tabs="JSON,YAML">
+      ```json
+      {
+        "theme": "dark",
+        "primaryColor": "#3B82F6",
+        "fontFamily": "Inter"
+      }
+      ```
+      ```yaml
+theme: dark
+primaryColor: '#3B82F6'
+fontFamily: Inter
+      ```
+    </CodeGroup>
+  </Tab>
+  <Tab title="Integrations" icon="plug">
+    Connect external services like Slack, GitHub, and CI/CD pipelines.
+
+    <Expandable title="Supported Integrations" default-open="false">
+      Dayslla Lays supports integrations with popular development tools including GitHub Actions, Slack notifications, and Jira issue tracking.
+    </Expandable>
+  </Tab>
+  <Tab title="Webhooks" icon="webhook">
+    Set up webhooks to receive real-time notifications about documentation changes.
+
+    <Request tabs="cURL" show-lines="true">
+      ```bash
+      curl -X POST https://api.dayslla-lays.com/v1/webhooks \
+           -H "Authorization: Bearer YOUR_API_KEY" \
+           -H "Content-Type: application/json" \
+           -d '{
+             "url": "https://your-app.com/webhook",
+             "events": ["doc.created", "doc.updated"],
+             "secret": "your-webhook-secret"
+           }'
+      ```
+    </Request>
+  </Tab>
+</Tabs>
+
+## Performance Optimization
+
+Optimize your documentation space for better performance and user experience.
+
+<Columns cols={2}>
+  <Card title="Caching" icon="zap" href="#">
+    Enable caching to reduce load times and improve responsiveness.
+  </Card>
+  <Card title="CDN" icon="globe" href="#">
+    Use a content delivery network to serve documentation globally.
+  </Card>
+</Columns>
+
+## Backup and Recovery
+
+Ensure your documentation is safe with robust backup and recovery options.
+
+<ExpandableGroup>
+  <Expandable title="Automatic Backups" default-open="true">
+    Daily automatic backups ensure your documentation is never lost due to accidental deletions or system failures.
+  </Expandable>
+  <Expandable title="Manual Exports" default-open="false">
+    Export your entire documentation space as Markdown or JSON for local storage or migration.
+  </Expandable>
+  <Expandable title="Version Restore" default-open="false">
+    Restore previous versions of individual documents or entire spaces using the version control system.
+  </Expandable>
+</ExpandableGroup>
+
+<Callout kind="info">Regular backups are recommended for critical documentation spaces.</Callout>
+
+By properly configuring your Dayslla Lays Documentation space, you can create an environment that meets your team's specific needs while maintaining optimal performance and security.

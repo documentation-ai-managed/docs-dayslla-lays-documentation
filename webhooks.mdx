@@ -1,0 +1,141 @@
+---
+title: Webhooks
+description: Set up and manage webhooks for real-time notifications in Dayslla Lays
+---
+
+## Webhook Overview
+
+Webhooks in Dayslla Lays Documentation allow you to receive real-time notifications when events occur in your documentation spaces. This enables you to build integrations and automate workflows based on documentation changes.
+
+<Callout kind="info">Webhooks deliver event data to your specified URL as soon as the event occurs.</Callout>
+
+## Setting Up Webhooks
+
+Creating and configuring webhooks is straightforward and can be done through the API or dashboard.
+
+<Steps>
+  <Step title="Create Endpoint" icon="server">
+    Set up an HTTP endpoint in your application to receive webhook payloads.
+  </Step>
+  <Step title="Register Webhook" icon="plus">
+    Register your webhook URL with Dayslla Lays and specify which events to listen for.
+  </Step>
+  <Step title="Verify Signature" icon="shield">
+    Implement signature verification to ensure webhook authenticity.
+  </Step>
+  <Step title="Handle Events" icon="code">
+    Process incoming webhook events in your application logic.
+  </Step>
+</Steps>
+
+## Supported Events
+
+Dayslla Lays sends webhooks for various documentation-related events, allowing you to react to changes in real-time.
+
+| Event | Description | Payload |
+|-------|-------------|---------|
+| `doc.created` | New document created | Document metadata and content |
+| `doc.updated` | Document modified | Changes and updated content |
+| `doc.deleted` | Document removed | Document ID and deletion info |
+| `space.created` | New space created | Space configuration |
+| `user.invited` | User invited to space | User and space details |
+
+<Tabs>
+  <Tab title="Document Events" icon="file-text">
+    Monitor changes to individual documents within your spaces.
+
+    <CodeGroup tabs="JavaScript,Python">
+      ```javascript
+      app.post('/webhook', (req, res) => {
+        const event = req.body.event;
+        if (event === 'doc.updated') {
+          console.log('Document updated:', req.body.document);
+        }
+        res.sendStatus(200);
+      });
+      ```
+      ```python
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/webhook', methods=['POST'])
+def handle_webhook():
+    data = request.get_json()
+    if data['event'] == 'doc.updated':
+        print('Document updated:', data['document'])
+    return 'OK', 200
+      ```
+    </CodeGroup>
+  </Tab>
+  <Tab title="Space Events" icon="folder">
+    Track changes at the documentation space level.
+
+    <Expandable title="Space Event Examples" default-open="false">
+      Space events include creation, deletion, and configuration changes that affect the entire documentation space.
+    </Expandable>
+  </Tab>
+  <Tab title="User Events" icon="user">
+    Monitor user-related activities in your spaces.
+
+    <Request tabs="cURL" show-lines="true">
+      ```bash
+      curl -X POST https://api.dayslla-lays.com/v1/webhooks \
+           -H "Authorization: Bearer YOUR_API_KEY" \
+           -H "Content-Type: application/json" \
+           -d '{
+             "url": "https://your-app.com/webhook",
+             "events": ["user.invited", "doc.created"],
+             "secret": "webhook-secret-123"
+           }'
+      ```
+    </Request>
+
+    <Response tabs="Success" show-lines="false">
+      ```json
+      {
+        "id": "wh_123456",
+        "url": "https://your-app.com/webhook",
+        "events": ["user.invited", "doc.created"],
+        "created_at": "2024-01-15T10:30:00Z"
+      }
+      ```
+    </Response>
+  </Tab>
+</Tabs>
+
+## Security and Best Practices
+
+Secure webhook implementation is crucial to protect your applications and data.
+
+<Columns cols={3}>
+  <Card title="Signature Verification" icon="lock" href="#">
+    Always verify webhook signatures to ensure authenticity.
+  </Card>
+  <Card title="HTTPS Only" icon="shield" href="#">
+    Use HTTPS URLs for webhook endpoints to encrypt data in transit.
+  </Card>
+  <Card title="Rate Limiting" icon="clock" href="#">
+    Implement rate limiting to handle webhook bursts gracefully.
+  </Card>
+</Columns>
+
+## Troubleshooting Webhooks
+
+If webhooks aren't working as expected, check these common issues.
+
+<ExpandableGroup>
+  <Expandable title="Webhook Not Firing" default-open="false">
+    Verify that the event you're listening for is actually occurring and that your webhook is active.
+  </Expandable>
+  <Expandable title="Invalid Signature" default-open="false">
+    Check your signature verification logic and ensure you're using the correct secret.
+  </Expandable>
+  <Expandable title="Timeout Errors" default-open="false">
+    Webhook endpoints must respond within 10 seconds to avoid timeout errors.
+  </Expandable>
+</ExpandableGroup>
+
+<Callout kind="tip">Test your webhook endpoints with sample payloads before going live.</Callout>
+
+Webhooks provide powerful automation capabilities, allowing you to integrate Dayslla Lays Documentation with your existing workflows and tools seamlessly.
